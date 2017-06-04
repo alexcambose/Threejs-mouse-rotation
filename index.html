@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <title>My first three.js app</title>
+    <style>
+        body { margin: 0;padding: 0; }
+        canvas { width: 100%; height: 100% }
+    </style>
+</head>
+<body>
+<script src="three.min.js"></script>
+<script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, .1, 1000);
+    const renderer = new THREE.WebGLRenderer({});
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    document.body.appendChild(renderer.domElement);
+
+
+    const material = new THREE.MeshLambertMaterial({color: 0xf9f9f9});
+    const cubesX = 22;
+    const cubesY = 12;
+    for(let i =cubesX/2 - cubesX; i<cubesX/2; i++) {
+        for (let j = cubesY/2 - cubesY; j < cubesY/2; j++) {
+            const geometry = new THREE.BoxGeometry(.5, .5, .5);
+            const cube = new THREE.Mesh(geometry, material);
+            cube.position.set(i*.6 ,j*.6 ,-5);
+            scene.add(cube);
+        }
+    }
+
+
+
+    var light = new THREE.AmbientLight( 0xffffff, .2 );
+    scene.add( light );
+
+    var light1 = new THREE.PointLight( 0xffffff, .2 );
+    light1.position.set(0,0,-3);
+    scene.add( light1 );
+
+    //mouse
+    mouseX = window.innerWidth/2;
+    mouseY = window.innerHeight/2;
+    renderer.domElement.addEventListener('mousemove',evt=>{
+        const rect = renderer.domElement.getBoundingClientRect();
+        mouseX = evt.clientX - rect.left;
+        mouseY = evt.clientY - rect.top;
+    });
+
+    function render() {
+        requestAnimationFrame( render );
+        renderer.render( scene, camera );
+        const divider = 2;
+        const multiplier = 1;
+
+        if(mouseX >= window.innerWidth/2){
+            camera.rotation.y = -(mouseX-window.innerWidth/2)/window.innerWidth/2/divider;
+            camera.position.x = -(mouseX-window.innerWidth/2)/window.innerWidth/2*multiplier;
+        }else{
+            camera.rotation.y = -(mouseX-window.innerWidth/2)/window.innerWidth/2/divider;
+            camera.position.x = -(mouseX-window.innerWidth/2)/window.innerWidth/2*multiplier;
+        }
+        if(mouseX >= window.innerHeight/2){
+            camera.rotation.x = -(mouseY-window.innerHeight/2)/window.innerHeight/2/divider;
+            camera.position.y = -(mouseY-window.innerHeight/2)/window.innerHeight/2*multiplier;
+
+        }else{
+            camera.rotation.x = -(mouseY-window.innerHeight/2)/window.innerHeight/2/divider;
+            camera.position.y = -(mouseY-window.innerHeight/2)/window.innerHeight/2*multiplier;
+
+        }
+        //camera.position.y = mouseY/100;
+    }
+    render();
+</script>
+</body>
+</html>
